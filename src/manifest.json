@@ -1,0 +1,18 @@
+{
+  "$schema": "https://raw.githubusercontent.com/sketch-hq/SketchAPI/develop/docs/sketch-plugin-manifest-schema.json",
+  "icon": "icon.jpg",
+  "commands": [
+    {
+      "name": "🐉 Toggle Greyscale",
+      "identifier": "greyscale.my-command-identifier",
+      "script": "./my-command.js",
+      "shortcut" : "cmd alt g"
+    }
+  ],
+  "menu": {
+    "isRoot": true,
+    "items": [
+      "greyscale.my-command-identifier"
+    ]
+  }
+}

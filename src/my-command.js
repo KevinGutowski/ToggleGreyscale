@@ -25,10 +25,10 @@ export default function() {
         return
     }
 
-    if (correctSelection.layers.find(layer => layer.name == "Greyscale Layer")) {
-        isRemoving = true
+    if (correctSelection.type == 'Artboard') {
+        setInitialAction(correctSelection)
     } else {
-        isRemoving = false
+        setInitialAction(correctSelection.getParentArtboard())
     }
 
     for (let i = 0; i < selection.length; i++) {
@@ -60,6 +60,15 @@ export default function() {
               locked: true
             })
         }
+    }
+}
+
+// determine whether or not to remove or add the greyscale layer
+function setInitialAction(artboard) {
+    if (artboard.layers.find(layer => layer.name == "Greyscale Layer")) {
+        isRemoving = true
+    } else {
+        isRemoving = false
     }
 }
 

@@ -1,7 +1,7 @@
 {
   "name": "greyscale",
   "description": "A Sketch plugin that adds a layer to your artboard so that you can preview your mocks in greyscale.",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "engines": {
     "sketch": ">=49.0"
   },

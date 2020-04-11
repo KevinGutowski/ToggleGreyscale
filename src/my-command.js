@@ -5,14 +5,12 @@ import sketch, {
     Style
 } from 'sketch'
 // documentation: https://developer.sketchapp.com/reference/api/
-let isRemoving
 
 export default function() {
     let doc = sketch.getSelectedDocument()
     let selection = doc.selectedLayers.layers
 
     if (!selection.length) {
-        console.log('triggered')
         UI.message('Please select a layer')
         return
     }
@@ -24,22 +22,15 @@ export default function() {
         return
     }
 
-    if (correctSelection.type == 'Artboard') {
-        setInitialAction(correctSelection)
-    } else {
-        setInitialAction(correctSelection.getParentArtboard())
-    }
+    const artboard = getArtboard(correctSelection)
+    const isRemoving = artboard.layers.find(layer => layer.name == "Greyscale Layer")
 
     for (let i = 0; i < selection.length; i++) {
         let parentArtboard
         let frame
         let layer = selection[i]
 
-        if (layer.type == 'Artboard') {
-            parentArtboard = layer
-        } else if (layer.getParentArtboard()) {
-            parentArtboard = layer.getParentArtboard()
-        }
+        parentArtboard = getArtboard(layer)
 
         let greyscaleLayer = parentArtboard.layers.find(layer => layer.name == "Greyscale Layer")
 
@@ -62,15 +53,6 @@ export default function() {
     }
 }
 
-// determine whether or not to remove or add the greyscale layer
-function setInitialAction(artboard) {
-    if (artboard.layers.find(layer => layer.name == "Greyscale Layer")) {
-        isRemoving = true
-    } else {
-        isRemoving = false
-    }
-}
-
 function removeGreyscaleLayer(layer) {
   if (layer) {
     layer.remove()
@@ -78,4 +60,12 @@ function removeGreyscaleLayer(layer) {
   } else {
     return false
   }
+}
+
+function getArtboard(maybeArtboard) {
+    if (maybeArtboard.type == 'Artboard') {
+        return maybeArtboard
+    } else {
+        return maybeArtboard.getParentArtboard()
+    }
 }

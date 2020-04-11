@@ -26,11 +26,9 @@ export default function() {
     const isRemoving = artboard.layers.find(layer => layer.name == "Greyscale Layer")
 
     for (let i = 0; i < selection.length; i++) {
-        let parentArtboard
-        let frame
         let layer = selection[i]
-
-        parentArtboard = getArtboard(layer)
+        let parentArtboard = getArtboard(layer)
+        let frame = new Rectangle(0, 0, parentArtboard.frame.width, parentArtboard.frame.height)
 
         let greyscaleLayer = parentArtboard.layers.find(layer => layer.name == "Greyscale Layer")
 
@@ -38,8 +36,6 @@ export default function() {
             removeGreyscaleLayer(greyscaleLayer)
             continue
         }
-
-        frame = new Rectangle(0, 0, parentArtboard.frame.width, parentArtboard.frame.height)
 
         if (!greyscaleLayer) {
             let overlay = new ShapePath({

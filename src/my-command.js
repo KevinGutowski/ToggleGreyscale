@@ -1,14 +1,13 @@
-import sketch from 'sketch'
+import sketch, {
+    UI,
+    ShapePath,
+    Rectangle,
+    Style
+} from 'sketch'
 // documentation: https://developer.sketchapp.com/reference/api/
 let isRemoving
 
 export default function() {
-    let sketch = require('sketch')
-    let UI = sketch.UI
-    let ShapePath = sketch.ShapePath
-    let Rectangle = sketch.Rectangle
-    let Style = sketch.Style
-
     let doc = sketch.getSelectedDocument()
     let selection = doc.selectedLayers.layers
 

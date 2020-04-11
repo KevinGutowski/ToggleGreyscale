@@ -1,19 +1,16 @@
-import sketch from 'sketch'
+import sketch, {
+    UI,
+    ShapePath,
+    Rectangle,
+    Style
+} from 'sketch'
 // documentation: https://developer.sketchapp.com/reference/api/
-let isRemoving
 
 export default function() {
-    let sketch = require('sketch')
-    let UI = sketch.UI
-    let ShapePath = sketch.ShapePath
-    let Rectangle = sketch.Rectangle
-    let Style = sketch.Style
-
     let doc = sketch.getSelectedDocument()
     let selection = doc.selectedLayers.layers
 
     if (!selection.length) {
-        console.log('triggered')
         UI.message('Please select a layer')
         return
     }
@@ -25,22 +22,13 @@ export default function() {
         return
     }
 
-    if (correctSelection.type == 'Artboard') {
-        setInitialAction(correctSelection)
-    } else {
-        setInitialAction(correctSelection.getParentArtboard())
-    }
+    const artboard = getArtboard(correctSelection)
+    const isRemoving = artboard.layers.find(layer => layer.name == "Greyscale Layer")
 
     for (let i = 0; i < selection.length; i++) {
-        let parentArtboard
-        let frame
         let layer = selection[i]
-
-        if (layer.type == 'Artboard') {
-            parentArtboard = layer
-        } else if (layer.getParentArtboard()) {
-            parentArtboard = layer.getParentArtboard()
-        }
+        let parentArtboard = getArtboard(layer)
+        let frame = new Rectangle(0, 0, parentArtboard.frame.width, parentArtboard.frame.height)
 
         let greyscaleLayer = parentArtboard.layers.find(layer => layer.name == "Greyscale Layer")
 
@@ -48,8 +36,6 @@ export default function() {
             removeGreyscaleLayer(greyscaleLayer)
             continue
         }
-
-        frame = new Rectangle(0, 0, parentArtboard.frame.width, parentArtboard.frame.height)
 
         if (!greyscaleLayer) {
             let overlay = new ShapePath({
@@ -63,15 +49,6 @@ export default function() {
     }
 }
 
-// determine whether or not to remove or add the greyscale layer
-function setInitialAction(artboard) {
-    if (artboard.layers.find(layer => layer.name == "Greyscale Layer")) {
-        isRemoving = true
-    } else {
-        isRemoving = false
-    }
-}
-
 function removeGreyscaleLayer(layer) {
   if (layer) {
     layer.remove()
@@ -79,4 +56,12 @@ function removeGreyscaleLayer(layer) {
   } else {
     return false
   }
+}
+
+function getArtboard(maybeArtboard) {
+    if (maybeArtboard.type == 'Artboard') {
+        return maybeArtboard
+    } else {
+        return maybeArtboard.getParentArtboard()
+    }
 }
